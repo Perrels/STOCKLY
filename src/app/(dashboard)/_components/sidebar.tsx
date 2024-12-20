@@ -1,10 +1,22 @@
+import { LayoutGrid, PackageIcon, ShoppingBasketIcon } from "lucide-react";
 import SidebarButtons from "./sidebar-button";
 
 const SideBar = () => {
  
   return (
     <>
-      <SidebarButtons />
+        <div className="w-64 bg-white p-">
+        {/* imagem */}
+        <div className="px-8 py-6">
+          <h1 className="font-bold text-2xl text-center">STOCKLY</h1>
+        </div>
+        {/* menu */}
+        <div className="flex flex-col gap-2 p-2">
+          <SidebarButtons href="/"><LayoutGrid size={20} /> Dashboard</SidebarButtons>
+          <SidebarButtons href="/products"><PackageIcon size={20} /> Products</SidebarButtons>  
+          <SidebarButtons href="/sales"><ShoppingBasketIcon size={20} /> Sales</SidebarButtons>
+        </div>
+      </div>
     </>
   );
 };
