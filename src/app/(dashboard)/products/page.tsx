@@ -3,16 +3,16 @@ import { db } from "@/app/_lib/prisma";
 import { PlusIcon } from "lucide-react";
 import { productTableColumns } from "./_components/table-columns";
 import { DataTable } from "@/app/_components/ui/data-table";
-// import { getProducts } from "../_actions/_products/get-products";
+import { getProducts } from "../_actions/_products/products";
 
 const ProductsPage = async () => {
   // chamando o banco de dados por um server componente
   // Vamos comentar esse abaixo pois vamos utilizar a outra forma que vai ser o fetch por HTTP
-  // const products = await getProducts();
+  const products = await getProducts();
 
   // Fazendo requisição por HTTP
-  const response = await fetch("http://localhost:3000/api/products");
-  const products = await response.json();
+  // const response = await fetch("http://localhost:3000/api/products");
+  // const products = await response.json();
   return (
     <>
       <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md">
