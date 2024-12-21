@@ -3,10 +3,11 @@ import { db } from "@/app/_lib/prisma";
 import { PlusIcon } from "lucide-react";
 import { productTableColumns } from "./_components/table-columns";
 import { DataTable } from "@/app/_components/ui/data-table";
+import { getProducts } from "../_actions/_products/get-products";
 
 const ProductsPage = async () => {
   // chamando o banco de dados
-  const products = await db.product.findMany({});
+  const products = await getProducts();
   return (
     <>
       <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md">

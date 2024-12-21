@@ -11,7 +11,6 @@ const SideBar = () => {
         <div className="px-8 py-6">
           <h1 className="font-bold text-2xl text-center">STOCKLY</h1>
         </div>
-        <Separator />
         {/* menu */}
         <div className="flex flex-col gap-2 p-2">
           <SidebarButtons href="/"><LayoutGrid size={20} /> Dashboard</SidebarButtons>
