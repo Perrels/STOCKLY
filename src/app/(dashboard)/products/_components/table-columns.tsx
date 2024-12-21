@@ -14,6 +14,10 @@ const getStatusLabel = (status: string) => {
 
 export const productTableColumns: ColumnDef<Product>[] = [
   {
+    accessorKey: "id",
+    header: "Código",
+  },
+  {
     accessorKey: "name",
     header: "Produto",
   },

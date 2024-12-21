@@ -6,7 +6,7 @@ import { DataTable } from "@/app/_components/ui/data-table";
 import { getProducts } from "../_actions/_products/get-products";
 
 const ProductsPage = async () => {
-  // chamando o banco de dados
+  // chamando o banco de dados por um server componente
   const products = await getProducts();
   return (
     <>
@@ -25,7 +25,8 @@ const ProductsPage = async () => {
             <PlusIcon size={20} /> Novo produto
           </Button>
         </div>
-      <DataTable columns={productTableColumns} data={products} />
+        {/* Passando dados como parametro para um client component */}
+      <DataTable columns={productTableColumns} data={JSON.parse(JSON.stringify(products))} />
       </div>
     </>
   );
