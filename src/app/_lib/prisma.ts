@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+
 declare global {
+  // eslint-disable-next-line no-var
   var cachedPrisma: ReturnType<typeof createPrismaClient>;
 }
+
 const createPrismaClient = () => {
   return new PrismaClient().$extends({
     result: {

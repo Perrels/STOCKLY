@@ -1,17 +1,23 @@
 import { Button } from "@/app/_components/ui/button";
-import { db } from "@/app/_lib/prisma";
 import { PlusIcon } from "lucide-react";
 import { productTableColumns } from "./_components/table-columns";
 import { DataTable } from "@/app/_components/ui/data-table";
-import { getProducts } from "../_actions/_products/products";
+import { cachedGetProducts} from "../_actions/_products/products";
+import { cookies, headers } from "next/headers";
 
 // forçar que a pagina sempre seja renderizada de forma dinamica
 export const dynamic = "force-dynamic";
 
 const ProductsPage = async () => {
+  // getting cookies
+  const get_cookies = cookies();
+  console.log(get_cookies);
+  const get_headers = headers();
+  console.log(get_headers);
+
   // chamando o banco de dados por um server componente
   // Vamos comentar esse abaixo pois vamos utilizar a outra forma que vai ser o fetch por HTTP
-  const products = await getProducts();
+  const products = await cachedGetProducts();
 
   // Fazendo requisição por HTTP
   // const response = await fetch("http://localhost:3000/api/products");

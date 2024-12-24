@@ -1,6 +1,5 @@
 import { LayoutGrid, PackageIcon, ShoppingBasketIcon } from "lucide-react";
 import SidebarButtons from "./sidebar-button";
-import { Separator } from "@/app/_components/ui/separator";
 
 const SideBar = () => {
  
