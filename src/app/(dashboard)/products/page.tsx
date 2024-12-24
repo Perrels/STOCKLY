@@ -5,6 +5,9 @@ import { productTableColumns } from "./_components/table-columns";
 import { DataTable } from "@/app/_components/ui/data-table";
 import { getProducts } from "../_actions/_products/products";
 
+// forçar que a pagina sempre seja renderizada de forma dinamica
+export const dynamic = "force-dynamic";
+
 const ProductsPage = async () => {
   // chamando o banco de dados por um server componente
   // Vamos comentar esse abaixo pois vamos utilizar a outra forma que vai ser o fetch por HTTP
