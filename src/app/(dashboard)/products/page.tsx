@@ -1,9 +1,8 @@
-import { Button } from "@/app/_components/ui/button";
-import { PlusIcon } from "lucide-react";
 import { productTableColumns } from "./_components/table-columns";
 import { DataTable } from "@/app/_components/ui/data-table";
-import { cachedGetProducts} from "../_actions/_products/products";
+import { cachedGetProducts } from "../_actions/_products/products";
 import { cookies, headers } from "next/headers";
+import AddProductButton from "./_components/add-product-button";
 
 // forçar que a pagina sempre seja renderizada de forma dinamica
 export const dynamic = "force-dynamic";
@@ -35,9 +34,7 @@ const ProductsPage = async () => {
             {/* <p className="text-gray-500">Lista de produtos cadastrados</p> */}
           </div>
           {/* direita */}
-          <Button className="gap-2">
-            <PlusIcon size={20} /> Novo produto
-          </Button>
+          <AddProductButton />
         </div>
         {/* Passando dados como parametro para um client component */}
         <DataTable
