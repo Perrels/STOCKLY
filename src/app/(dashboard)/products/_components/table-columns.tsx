@@ -13,7 +13,8 @@ import {
   TrashIcon,
 } from "lucide-react";
 import {
-  AlertDialog, AlertDialogTrigger
+  AlertDialog,
+  AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
 import {
   DropdownMenu,
@@ -25,6 +26,9 @@ import {
 } from "@/app/_components/ui/dropdown-menu";
 import { Button } from "@/app/_components/ui/button";
 import DeleteDialogContent from "./delete-dialog";
+import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
+import AddEditProductDialogContentForm from "./add-edit-product-dialog-form";
+import { useState } from "react";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -82,42 +86,55 @@ export const productTableColumns: ColumnDef<Product>[] = [
     accessorKey: "actions",
     header: "Ações",
     cell: (row) => {
+      const [editDialogOpen, setEditDialogOpen] = useState(false);
       const product = row.row.original;
       const idToString = product.id.toString();
       return (
         <AlertDialog>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost">
-                <MoreVerticalIcon className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="gap-1.5"
-                onClick={() => {
-                  navigator.clipboard.writeText(idToString);
-                }}
-              >
-                <ClipboardCopyIcon size={16} /> Copiar ID
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-1.5">
-                <EditIcon size={16} /> Editar
-              </DropdownMenuItem>
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem className="gap-1.5">
-                  <TrashIcon size={16} />
-                  Excluir
+          <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost">
+                  <MoreVerticalIcon className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="gap-1.5"
+                  onClick={() => {
+                    navigator.clipboard.writeText(idToString);
+                  }}
+                >
+                  <ClipboardCopyIcon size={16} /> Copiar ID
                 </DropdownMenuItem>
-              </AlertDialogTrigger>
-              <DropdownMenuItem className="gap-1.5">
-                <Info size={16} /> Detalhes
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-         <DeleteDialogContent productId={product.id}/>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem className="gap-1.5">
+                    <EditIcon size={16} /> Editar
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem className="gap-1.5">
+                    <TrashIcon size={16} />
+                    Excluir
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <DropdownMenuItem className="gap-1.5">
+                  <Info size={16} /> Detalhes
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <AddEditProductDialogContentForm onSuccess={() => setEditDialogOpen(false)} defaultValues={
+              {
+                id: product.id,
+                name: product.name,
+                price: Number(product.price),
+                stock: product.stock
+              }
+            }/>
+            <DeleteDialogContent productId={product.id} />
+          </Dialog>
         </AlertDialog>
       );
     },

@@ -17,45 +17,51 @@ import {
   DialogClose,
 } from "@/app/_components/ui/dialog";
 import { Loader2Icon } from "lucide-react";
-import {useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { Input } from "@/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createProduct } from "../../_actions/_products/create-product";
+import { upsertProduct } from "../../_actions/_products/create-product";
 import { toast } from "sonner";
 import { z } from "zod";
 
 interface Props {
+  defaultValues?: FormSchemaProduct;
   onSuccess?: () => void;
 }
 
 const formSchema = z.object({
+  id: z.coerce.number().optional(),
   name: z.string().trim().min(1, { message: "Campo obrigatório" }),
   price: z.number().min(0.01, { message: "Campo obrigatório" }),
   stock: z.coerce
     .number()
-    .positive({ message: "O estoque tem que ser positivo" })
     .int()
-    .min(0, { message: "Campo obrigatório" }),
+    .min(0, { message: "O valor de estoque não pode ser negativo" }),
 });
 
 export type FormSchemaProduct = z.infer<typeof formSchema>;
 
-const AddEditProductDialogContentForm = ({ onSuccess }: Props) => {
+const AddEditProductDialogContentForm = ({
+  defaultValues,
+  onSuccess,
+}: Props) => {
   const form = useForm<FormSchemaProduct>({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: defaultValues ?? {
       name: "",
       price: 0,
       stock: 1,
     },
   });
 
+  const isEditing = !!defaultValues;
+
   const onSubmit = async (data: FormSchemaProduct) => {
     // console.log("data onSubmit", data);
     try {
-      await createProduct(data);
+      await upsertProduct({...data, id: defaultValues?.id});
       //   setDialogIsOpen(false);
       onSuccess?.();
       toast.success("Produto criado com sucesso!");
@@ -70,7 +76,9 @@ const AddEditProductDialogContentForm = ({ onSuccess }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Criar produto</DialogTitle>
+              <DialogTitle>
+                {isEditing ? "Editar produto" : "Adicionar produto"}
+              </DialogTitle>
               <DialogDescription>
                 Insira as informações abaixo
               </DialogDescription>

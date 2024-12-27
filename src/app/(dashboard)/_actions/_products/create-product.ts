@@ -1,9 +1,17 @@
 "use server";
 import { db } from "@/app/_lib/prisma";
-import { FormSchemaProduct } from "../../products/_components/add-product-button";
 import { revalidatePath } from "next/cache";
+import { FormSchemaProduct } from "../../products/_components/add-edit-product-dialog-form";
 
-export const createProduct = async (product: FormSchemaProduct) => {
-  await db.product.create({ data: product });
+export const upsertProduct = async (data: FormSchemaProduct) => {
+  await db.product.upsert({
+    where: { id: data.id || 0 }, // Certifique-se de que `id` é uma string ou ajuste conforme necessário
+    create: {
+      name: data.name,
+      price: data.price,
+      stock: data.stock,
+    },
+    update: data,
+  });
   revalidatePath("/dashboard/products");
 };
