@@ -10,7 +10,6 @@ import {
   EditIcon,
   Info,
   MoreVerticalIcon,
-  SkullIcon,
   TrashIcon,
   X,
 } from "lucide-react";
@@ -32,12 +31,12 @@ import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
 import AddEditProductDialogContentForm from "./add-edit-product-dialog-form";
 import { useState } from "react";
 
-const getStatusLabel = (status: string) => {
-  if (status === "IN_STOCK") {
-    return "Em estoque";
-  }
-  return "Sem estoque";
-};
+// const getStatusLabel = (status: string) => {
+//   if (status === "IN_STOCK") {
+//     return "Em estoque";
+//   }
+//   return "Sem estoque";
+// };
 
 export const productTableColumns: ColumnDef<Product>[] = [
   {
@@ -68,7 +67,7 @@ export const productTableColumns: ColumnDef<Product>[] = [
     header: "Status",
     cell: (row) => {
       const product = row.row.original;
-      const label = getStatusLabel(product.status);
+      // const label = getStatusLabel(product.status);
       const stockValue = product.stock;
       return (
         <Badge
