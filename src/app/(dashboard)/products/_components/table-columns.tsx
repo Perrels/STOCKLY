@@ -10,7 +10,9 @@ import {
   EditIcon,
   Info,
   MoreVerticalIcon,
+  SkullIcon,
   TrashIcon,
+  X,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -67,17 +69,26 @@ export const productTableColumns: ColumnDef<Product>[] = [
     cell: (row) => {
       const product = row.row.original;
       const label = getStatusLabel(product.status);
+      const stockValue = product.stock;
       return (
         <Badge
           className="gap-1.5 w-32"
-          variant={label === "Em estoque" ? "default" : "destructive"}
+          variant={
+            stockValue === 0
+              ? "destructive"
+              : stockValue <= 5
+                ? "alert"
+                : "default"
+          }
         >
-          {label === "Em estoque" ? (
-            <CheckIcon size={16} />
-          ) : (
+          {stockValue === 0 ? (
+            <X size={16} />
+          ) : stockValue <= 5 ? (
             <AlertCircle size={16} />
+          ) : (
+            <CheckIcon size={16} />
           )}
-          {label}{" "}
+          {stockValue === 0 ? "Sem estoque" : (stockValue <= 5 ? "Estoque baixo" : "Em estoque")}
         </Badge>
       );
     },
@@ -125,14 +136,15 @@ export const productTableColumns: ColumnDef<Product>[] = [
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <AddEditProductDialogContentForm onSuccess={() => setEditDialogOpen(false)} defaultValues={
-              {
+            <AddEditProductDialogContentForm
+              onSuccess={() => setEditDialogOpen(false)}
+              defaultValues={{
                 id: product.id,
                 name: product.name,
                 price: Number(product.price),
-                stock: product.stock
-              }
-            }/>
+                stock: product.stock,
+              }}
+            />
             <DeleteDialogContent productId={product.id} />
           </Dialog>
         </AlertDialog>
