@@ -24,11 +24,13 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/app/_components/ui/input";
+import { NumericFormat } from "react-number-format";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: "Campo obrigatório" }),
   price: z.number().min(0.01, { message: "Campo obrigatório" }),
-  stock: z.number().int().min(0, { message: "Campo obrigatório" }),
+  stock: z.coerce.number().positive({message:"O estoque tem que ser positivo"
+  }).int().min(0, { message: "Campo obrigatório" }),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -79,35 +81,49 @@ const AddProductButton = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Preço</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Preço do produto..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stock"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Estoque</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Insira a quantidade do produto..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Preço</FormLabel>
+                      <FormControl>
+                        <NumericFormat
+                          thousandSeparator="."
+                          decimalSeparator=","
+                          prefix="R$ "
+                          decimalScale={2}
+                          allowNegative={false}
+                          customInput={Input}
+                          fixedDecimalScale
+                          onValueChange={(value) => field.onChange(value.floatValue)}
+                          {...field}
+                          onChange={() => {}}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="stock"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Estoque</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Insira a quantidade do produto..."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <DialogClose asChild>
                   <Button type="reset" variant={"secondary"}>
