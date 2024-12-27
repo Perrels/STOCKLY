@@ -3,13 +3,31 @@
 import { Badge } from "@/app/_components/ui/badge";
 import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { AlertCircle, CheckIcon } from "lucide-react";
+import {
+  AlertCircle,
+  CheckIcon,
+  ClipboardCopyIcon,
+  EditIcon,
+  Info,
+  MoreHorizontalIcon,
+  MoreVerticalIcon,
+  TrashIcon,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/app/_components/ui/dropdown-menu";
+import { Button } from "@/app/_components/ui/button";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
-    return <Badge className="gap-1" variant={"success"}><CheckIcon size={16}/> Em estoque</Badge>;
+    return "Em estoque";
   }
-  return <Badge className="gap-1 items-center" variant={"destructive"}><AlertCircle size={16}/> Sem estoque</Badge>;
+  return "Sem estoque";
 };
 
 export const productTableColumns: ColumnDef<Product>[] = [
@@ -35,7 +53,6 @@ export const productTableColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "stock",
     header: "Estoque",
-    
   },
   {
     accessorKey: "status",
@@ -43,7 +60,51 @@ export const productTableColumns: ColumnDef<Product>[] = [
     cell: (row) => {
       const product = row.row.original;
       const label = getStatusLabel(product.status);
-      return label;
+      return (
+        <Badge
+          className="gap-1.5 w-32"
+          variant={label === "Em estoque" ? "default" : "destructive"}
+        >
+          {label === "Em estoque" ? (
+            <CheckIcon size={16} />
+          ) : (
+            <AlertCircle size={16} />
+          )}
+          {label}{" "}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: "Ações",
+    cell: (row) => {
+      const product = row.row.original;
+      const idToString = product.id.toString();
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost">
+              <MoreVerticalIcon className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Ações</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="gap-1.5"
+              onClick={() => {
+                navigator.clipboard.writeText(idToString);
+              }}
+            >
+              <ClipboardCopyIcon size={16} /> Copiar ID
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-1.5"><EditIcon size={16}/> Editar</DropdownMenuItem>
+            <DropdownMenuItem className="gap-1.5"><TrashIcon size={16}/>Excluir</DropdownMenuItem>
+            <DropdownMenuItem className="gap-1.5"><Info size={16}/> Detalhes</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];
