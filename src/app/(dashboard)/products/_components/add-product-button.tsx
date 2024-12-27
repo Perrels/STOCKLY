@@ -19,24 +19,32 @@ import {
   FormMessage,
 } from "@/app/_components/ui/form";
 import { Button } from "@/app/_components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { Loader2Icon, PlusIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/app/_components/ui/input";
 import { NumericFormat } from "react-number-format";
+import { createProduct } from "../../_actions/_products/create-product";
+import React, { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: "Campo obrigatório" }),
   price: z.number().min(0.01, { message: "Campo obrigatório" }),
-  stock: z.coerce.number().positive({message:"O estoque tem que ser positivo"
-  }).int().min(0, { message: "Campo obrigatório" }),
+  stock: z.coerce
+    .number()
+    .positive({ message: "O estoque tem que ser positivo" })
+    .int()
+    .min(0, { message: "Campo obrigatório" }),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
+export type FormSchemaProduct = z.infer<typeof formSchema>;
 
 const AddProductButton = () => {
-  const form = useForm<FormSchema>({
+
+    const [dialogIsOpen, setDialogIsOpen] = useState(false);
+
+  const form = useForm<FormSchemaProduct>({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,13 +54,19 @@ const AddProductButton = () => {
     },
   });
 
-  const onSubmit = (data: FormSchema) => {
-    console.log("data onSubmit", data);
+  const onSubmit = async (data: FormSchemaProduct) => {
+    // console.log("data onSubmit", data);
+    try {
+      await createProduct(data);
+      setDialogIsOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <>
-      <Dialog>
+      <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
         <DialogTrigger asChild>
           <Button className="gap-2">
             <PlusIcon size={20} /> Novo produto
@@ -97,7 +111,9 @@ const AddProductButton = () => {
                           allowNegative={false}
                           customInput={Input}
                           fixedDecimalScale
-                          onValueChange={(value) => field.onChange(value.floatValue)}
+                          onValueChange={(value) =>
+                            field.onChange(value.floatValue)
+                          }
                           {...field}
                           onChange={() => {}}
                         />
@@ -130,7 +146,13 @@ const AddProductButton = () => {
                     Cancelar
                   </Button>
                 </DialogClose>
-                <Button type="submit">Salvar</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting} className="gap-1.5">
+                  {form.formState.isSubmitting ? (
+                    <Loader2Icon className="animate-spin" />
+                  ) : (
+                    "Salvar"
+                  )}
+                </Button>
               </DialogFooter>
             </form>
           </Form>

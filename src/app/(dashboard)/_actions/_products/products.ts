@@ -20,6 +20,6 @@ export const getProducts = async (): Promise<Product[]> => {
 
 export const cachedGetProducts = cache(getProducts);
 
-export const createProduct = async (product: Product): Promise<void> => {
-  await db.product.create({ data: product });
-}
+// export const createProduct = async (product: Product): Promise<void> => {
+//   await db.product.create({ data: product });
+// }
