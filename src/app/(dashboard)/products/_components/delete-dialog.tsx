@@ -10,6 +10,7 @@ import {
   AlertDialogAction,
 } from "@/app/_components/ui/alert-dialog";
 import { deleteProduct } from "../../_actions/_products/delete-product";
+import { toast } from "sonner";
 
 interface DeleteDialogContentProps {
   productId: number;
@@ -19,8 +20,10 @@ const DeleteDialogContent = ({ productId }: DeleteDialogContentProps) => {
   const handleDeleteItem = async () => {
     try {
       await deleteProduct(productId);
+      toast.success("Produto excluido com sucesso!");
     } catch (error) {
       console.log(error);
+      toast.error("Erro ao excluir produto!");
     }
   };
   return (

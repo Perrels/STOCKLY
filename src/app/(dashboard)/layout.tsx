@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import SideBar from "./_components/sidebar";
 import { Inter } from "next/font/google";
+import { Toaster } from "../_components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "STOCKLY",
@@ -22,6 +23,7 @@ export default function RootLayout({
           <SideBar />
           {children}
         </div>
+        <Toaster />
       </body>
     </html>
   );
