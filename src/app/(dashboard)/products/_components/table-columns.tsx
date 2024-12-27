@@ -13,15 +13,7 @@ import {
   TrashIcon,
 } from "lucide-react";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialog, AlertDialogTrigger
 } from "@/app/_components/ui/alert-dialog";
 import {
   DropdownMenu,
@@ -32,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
 import { Button } from "@/app/_components/ui/button";
+import DeleteDialogContent from "./delete-dialog";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -124,20 +117,7 @@ export const productTableColumns: ColumnDef<Product>[] = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Alert content do excluir  */}
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Você está prestes a excluir o produto: {product.name}. Essa ação não pode ser desfeita!
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction>Excluir</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-          {/* fim do alert content do excluir */}
+         <DeleteDialogContent productId={product.id}/>
         </AlertDialog>
       );
     },
