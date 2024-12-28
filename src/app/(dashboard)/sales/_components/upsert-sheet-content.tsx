@@ -23,17 +23,23 @@ import { Input } from "@/app/_components/ui/input";
 import {
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/app/_components/ui/sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
-import { MoreHorizontalIcon, MoreVerticalIcon, PlusIcon } from "lucide-react";
+import {
+  CheckIcon,
+  PlusIcon,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { formatCurrency } from "../../helper/currency";
 import TableDropdownMenu from "./table-dropdown-menu";
+import { createSale } from "../../_actions/_sales/create-sale";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   productId: z.string(),
@@ -140,6 +146,22 @@ const UpsertSheetContent = ({
     });
   };
 
+  // efetua a venda com os produtos selecionados
+  const onSubmitSale = async () => {
+    try {
+      await createSale({
+        product: selectedProducts.map((product) => ({
+          id: product.id,
+          quantity: product.quantity,
+        })),
+      });
+      toast.success("Venda realizada com sucesso!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao realizar venda!");
+    }
+  };
+
   return (
     <>
       <SheetContent className="!max-w-[50vw] !min-w-[600px]">
@@ -238,6 +260,14 @@ const UpsertSheetContent = ({
           </TableFooter>
         </Table>
         {/* fim da tabela */}
+        <SheetFooter>
+          <Button onClick={onSubmitSale}
+            className="w-full mt-10 gap-2"
+            disabled={selectedProducts.length === 0}
+          >
+            <CheckIcon size={20} /> Finalizar Venda
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </>
   );
