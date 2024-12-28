@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { db } from "@/app/_lib/prisma";
 import { createSaleSchema, CreateSaleSchema } from "./schema";
 
@@ -32,6 +32,11 @@ export const createSale = async (data: CreateSaleSchema) => {
         unitPrice: productFromDB.price,
         quantity: product.quantity,
       },
+    });
+    // diminui o estoque do produto
+    await db.product.update({
+      where: { id: product.id },
+      data: { stock: { decrement: product.quantity } },
     });
   }
 };

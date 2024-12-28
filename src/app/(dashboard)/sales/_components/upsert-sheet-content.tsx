@@ -53,6 +53,7 @@ type FormSchema = z.infer<typeof formSchema>;
 interface UpsertSheetContentProps {
   products: Product[];
   productOptions: ComboboxOption[];
+  onSubmitSuccess: () => void;
 }
 
 interface SelectedProducts {
@@ -66,6 +67,7 @@ interface SelectedProducts {
 const UpsertSheetContent = ({
   products,
   productOptions,
+  onSubmitSuccess,
 }: UpsertSheetContentProps) => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts[]>(
     []
@@ -156,6 +158,7 @@ const UpsertSheetContent = ({
         })),
       });
       toast.success("Venda realizada com sucesso!");
+      onSubmitSuccess();
     } catch (error) {
       console.log(error);
       toast.error("Erro ao realizar venda!");
