@@ -6,7 +6,7 @@ import "server-only";
 
 export const getProducts = async (): Promise<Product[]> => {
   console.log("Feching products...");
-  const products = await db.product.findMany({});
+  const products = await db.product.findMany({orderBy: {name: "asc"}});
   return products;
 };
 
