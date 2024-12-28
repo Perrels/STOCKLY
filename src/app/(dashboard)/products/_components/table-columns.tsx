@@ -3,33 +3,8 @@
 import { Badge } from "@/app/_components/ui/badge";
 import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  AlertCircle,
-  CheckIcon,
-  ClipboardCopyIcon,
-  EditIcon,
-  Info,
-  MoreVerticalIcon,
-  TrashIcon,
-  X,
-} from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-} from "@/app/_components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/app/_components/ui/dropdown-menu";
-import { Button } from "@/app/_components/ui/button";
-import DeleteDialogContent from "./delete-dialog";
-import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
-import AddEditProductDialogContentForm from "./add-edit-product-dialog-form";
-import { useState } from "react";
+import { AlertCircle, CheckIcon, X } from "lucide-react";
+
 import ProductDropdownAction from "./product-dropdown-action";
 
 // const getStatusLabel = (status: string) => {

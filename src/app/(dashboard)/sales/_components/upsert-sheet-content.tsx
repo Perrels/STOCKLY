@@ -28,11 +28,12 @@ import {
 } from "@/app/_components/ui/sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
-import { PlusIcon } from "lucide-react";
+import { MoreHorizontalIcon, MoreVerticalIcon, PlusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { formatCurrency } from "../../helper/currency";
+import TableDropdownMenu from "./table-dropdown-menu";
 
 const formSchema = z.object({
   productId: z.string(),
@@ -103,12 +104,24 @@ const UpsertSheetContent = ({
     });
     form.reset();
   };
-
+  // função de soma de valor total de produtos da venda
   const productsTotal = useMemo(() => {
     return selectedProducts.reduce((acc, product) => {
       return acc + product.price * product.quantity;
     }, 0);
   }, [selectedProducts]);
+
+  /**
+   * @params  productId: number
+   * @description Remove um produto da lista de produtos da venda
+   * @returns uma lista de produtos onde o produto selecionado não está na lista de produtos da venda
+   */
+  const removeProduct = (productId: number) => {
+    setSelectedProducts((currentyProduct) => {
+      return currentyProduct.filter((product) => product.id !== productId);
+    });
+  };
+
 
   return (
     <>
@@ -175,6 +188,7 @@ const UpsertSheetContent = ({
               <TableHead>Preço Unitário</TableHead>
               <TableHead>Quantidade</TableHead>
               <TableHead>Total</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -187,12 +201,13 @@ const UpsertSheetContent = ({
                 <TableCell className="text-right">
                   {formatCurrency(product.price * product.quantity)}
                 </TableCell>
+                <TableCell><TableDropdownMenu product={product} onDelete={removeProduct} /></TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={4}>Total</TableCell>
+              <TableCell colSpan={5}>Total da venda</TableCell>
               <TableCell className="text-left">{formatCurrency(productsTotal)}</TableCell>
             </TableRow>
           </TableFooter>
