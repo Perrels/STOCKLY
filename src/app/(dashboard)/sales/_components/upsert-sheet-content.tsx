@@ -82,7 +82,18 @@ const UpsertSheetContent = ({
       const existingProduct = currentyProduct.find(
         (product) => product.id === selectedProduct.id
       );
+
       if (existingProduct) {
+        // se a quantidade que estamos selecionando for maior que o estoque do produto, envia mensagem de erro ao user
+        const productIsMoreThanStock =
+          existingProduct.quantity + data.quantity > selectedProduct.stock;
+        if (productIsMoreThanStock) {
+          form.setError("quantity", {
+            message: `O estoque de ${selectedProduct.name} é insuficiente`,
+          });
+          return currentyProduct;
+        }
+
         return currentyProduct.map((product) => {
           if (product.id === selectedProduct.id) {
             return {
@@ -93,6 +104,14 @@ const UpsertSheetContent = ({
           return product;
         });
       }
+      const productIsMoreThanStock = data.quantity > selectedProduct.stock;
+      if (productIsMoreThanStock) {
+        form.setError("quantity", {
+          message: `O estoque de ${selectedProduct.name} é insuficiente`,
+        });
+        return currentyProduct;
+      }
+      form.reset();
       return [
         ...currentyProduct,
         {
@@ -102,7 +121,6 @@ const UpsertSheetContent = ({
         },
       ];
     });
-    form.reset();
   };
   // função de soma de valor total de produtos da venda
   const productsTotal = useMemo(() => {
@@ -121,7 +139,6 @@ const UpsertSheetContent = ({
       return currentyProduct.filter((product) => product.id !== productId);
     });
   };
-
 
   return (
     <>
@@ -201,14 +218,22 @@ const UpsertSheetContent = ({
                 <TableCell className="text-right">
                   {formatCurrency(product.price * product.quantity)}
                 </TableCell>
-                <TableCell><TableDropdownMenu product={product} onDelete={removeProduct} /></TableCell>
+                <TableCell>
+                  <TableDropdownMenu
+                    product={product}
+                    onDelete={removeProduct}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={5}>Total da venda</TableCell>
-              <TableCell className="text-left">{formatCurrency(productsTotal)}</TableCell>
+              <TableCell colSpan={4}>Total da venda</TableCell>
+              <TableCell className="text-left">
+                {formatCurrency(productsTotal)}
+              </TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableFooter>
         </Table>
