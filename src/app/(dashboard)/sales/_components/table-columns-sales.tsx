@@ -1,10 +1,8 @@
 "use client";
-import { Button } from "@/app/_components/ui/button";
-import { Sale } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontalIcon } from "lucide-react";
 import { GetSalesDTO } from "../../_actions/_sales/get-sales";
 import { formatCurrency } from "../../helper/currency";
+import InfoDropdownMenuSales from "./info-dropdown-menu-sales";
 
 export const saleTableColumns: ColumnDef<GetSalesDTO>[] = [
   {
@@ -38,10 +36,8 @@ export const saleTableColumns: ColumnDef<GetSalesDTO>[] = [
   },
   {
     header: "Ações",
-    cell: () => (
-      <Button variant={"ghost"}>
-        <MoreHorizontalIcon size={16} />
-      </Button>
+    cell: ({row: {original: sale}}) => (
+      <InfoDropdownMenuSales sale={sale}/>
     ),
   },
 ];
