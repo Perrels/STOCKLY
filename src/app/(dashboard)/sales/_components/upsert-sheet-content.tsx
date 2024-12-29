@@ -37,7 +37,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { formatCurrency } from "../../helper/currency";
-import TableDropdownMenu from "./table-dropdown-menu";
+import TableDropdownMenu from "./upsert-table-dropdown-menu-sales";
 import { createSale } from "../../_actions/_sales/create-sale";
 import { toast } from "sonner";
 
