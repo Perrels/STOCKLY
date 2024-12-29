@@ -5,10 +5,14 @@ import { Button } from "@/app/_components/ui/button";
 import { SheetTrigger } from "@/app/_components/ui/sheet";
 import { PlusIcon } from "lucide-react";
 import UpsertSheetContent from "./_components/upsert-sheet-content";
+import { DataTable } from "@/app/_components/ui/data-table";
+import { saleTableColumns } from "./_components/table-columns-sales";
+import { getSales } from "../_actions/_sales/get-sales";
 // forçar que a pagina sempre seja renderizada de forma dinamica
 export const dynamic = "force-dynamic";
 
 const SalesPage = async () => {
+  const sales = await getSales();
   const products = await cachedGetProducts();
   const productOptions: ComboboxOption[] = products.map((product) => ({
     label: product.name,
@@ -25,15 +29,8 @@ const SalesPage = async () => {
             <h2 className="text-xl font-semibold">Vendas</h2>
           </div>
           <CreateSaleSheet products={products} productOptions={productOptions} />
-          {/* <Sheet>
-            <SheetTrigger asChild>
-              <Button className="gap-2">
-                <PlusIcon size={20} /> Nova venda
-              </Button>
-            </SheetTrigger>
-            <UpsertSheetContent products={products} productOptions={productOptions} />
-          </Sheet> */}
         </div>
+        <DataTable columns={saleTableColumns} data={sales} />
       </div>
     </>
   );
