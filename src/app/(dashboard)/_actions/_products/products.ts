@@ -3,11 +3,16 @@ import { Product } from "@prisma/client";
 import { cache } from "react";
 import "server-only";
 
+export interface ProductDTO extends Product {
+  status: "IN_STOCK" | "OUT_OF_STOCK";
+}
 
-export const getProducts = async (): Promise<Product[]> => {
-  console.log("Feching products...");
+export const getProducts = async (): Promise<ProductDTO[]> => {
   const products = await db.product.findMany({orderBy: {name: "asc"}});
-  return products;
+  return products.map((product) => ({
+    ...product,
+    status: product.stock > 0 ? "IN_STOCK" : "OUT_OF_STOCK",
+  }));
 };
 
 // criando função para memoizing 
