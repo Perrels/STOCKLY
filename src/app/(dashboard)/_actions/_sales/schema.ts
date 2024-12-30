@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const createSaleSchema = z.object({
+  id: z.coerce.number().optional(),
   product: z.array(
     z.object({
       id: z.coerce.number(),

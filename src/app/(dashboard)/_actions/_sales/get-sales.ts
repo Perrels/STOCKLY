@@ -1,5 +1,13 @@
 "use server";
 import { db } from "@/app/_lib/prisma";
+import { SaleProduct } from "@prisma/client";
+
+interface SaleProductDTO {
+  product_id: number;
+  quantity: number;
+  unitPrice: number;
+  productName: string;
+}
 
 // Criando uma interface para devolver os valores que desejamos no final da chamada
 // Que facilita muito na hora de devolver dados de campos dinamicos
@@ -9,6 +17,7 @@ export interface GetSalesDTO {
   totalProductsNumber: number;
   totalValue: number;
   date: Date;
+  saleProducts: SaleProductDTO[];
 }
 
 /**
@@ -28,7 +37,9 @@ export const getSales = async (): Promise<GetSalesDTO[]> => {
 
   return sales.map((sale) => ({
     id: sale.id,
-    productsNames: sale.products.map((saleProduct) => saleProduct.product.name).join(", "),
+    productsNames: sale.products
+      .map((saleProduct) => saleProduct.product.name)
+      .join(", "),
     totalProductsNumber: sale.products.reduce(
       (acc, saleProduct) => acc + saleProduct.quantity,
       0
@@ -39,5 +50,11 @@ export const getSales = async (): Promise<GetSalesDTO[]> => {
       0
     ),
     date: sale.date,
+    saleProducts: sale.products.map((saleProduct): SaleProductDTO => ({
+      product_id: saleProduct.productId,
+      quantity: saleProduct.quantity,
+      unitPrice: Number(saleProduct.unitPrice),
+      productName: saleProduct.product.name
+    }))
   }));
 };

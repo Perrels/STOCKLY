@@ -1,10 +1,6 @@
 import { cachedGetProducts } from "../_actions/_products/products";
 import { ComboboxOption } from "@/app/_components/combox";
 import CreateSaleSheet from "./_components/create-sale-sheet";
-import { Button } from "@/app/_components/ui/button";
-import { SheetTrigger } from "@/app/_components/ui/sheet";
-import { PlusIcon } from "lucide-react";
-import UpsertSheetContent from "./_components/upsert-sheet-content";
 import { DataTable } from "@/app/_components/ui/data-table";
 import { saleTableColumns } from "./_components/table-columns-sales";
 import { getSales } from "../_actions/_sales/get-sales";
@@ -14,9 +10,14 @@ export const dynamic = "force-dynamic";
 const SalesPage = async () => {
   const sales = await getSales();
   const products = await cachedGetProducts();
-  const productOptions: ComboboxOption[] = products.map((product) => ({
+  const productsOptions: ComboboxOption[] = products.map((product) => ({
     label: product.name,
     value: product.id.toString(),
+  }));
+  const tableData = sales.map((sale) => ({
+    ...sale,
+    products,
+    productsOptions,
   }));
   return (
     <>
@@ -28,9 +29,9 @@ const SalesPage = async () => {
             </span>
             <h2 className="text-xl font-semibold">Vendas</h2>
           </div>
-          <CreateSaleSheet products={products} productOptions={productOptions} />
+          <CreateSaleSheet products={products} productOptions={productsOptions} />
         </div>
-        <DataTable columns={saleTableColumns} data={sales} />
+        <DataTable columns={saleTableColumns} data={tableData} />
       </div>
     </>
   );

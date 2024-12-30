@@ -29,17 +29,15 @@ import {
 } from "@/app/_components/ui/sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
-import {
-  CheckIcon,
-  PlusIcon,
-} from "lucide-react";
-import { useMemo, useState } from "react";
+import { CheckIcon, PlusIcon } from "lucide-react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { formatCurrency } from "../../helper/currency";
 import TableDropdownMenu from "./upsert-table-dropdown-menu-sales";
-import { createSale } from "../../_actions/_sales/create-sale";
+import { createSale } from "../../_actions/_sales/upsert-sale";
 import { toast } from "sonner";
+import { ProductDTO } from "../../_actions/_products/products";
 
 const formSchema = z.object({
   productId: z.string(),
@@ -50,12 +48,6 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-interface UpsertSheetContentProps {
-  products: Product[];
-  productOptions: ComboboxOption[];
-  onSubmitSuccess: () => void;
-}
-
 interface SelectedProducts {
   // VAI DA PAU TEM QUE SER NUMBER
   id: number;
@@ -64,15 +56,35 @@ interface SelectedProducts {
   quantity: number;
 }
 
+interface UpsertSheetContentProps {
+  saleId?: number;
+  products: ProductDTO[];
+  productOptions: ComboboxOption[];
+  onSubmitSuccess: Dispatch<SetStateAction<boolean>>;
+  defaultSelectedProducts?: SelectedProducts[];
+}
+
+/**
+ * @component
+ * @description Componente responsável por renderizar a sheet de inclusão de uma venda
+ * @param {Product[]} products - lista de produtos
+ * @param {ComboboxOption[]} productOptions - lista de options para o combobox de produtos
+ * @param {Dispatch<SetStateAction<boolean>>} setSheetIsOpen - função para fechar a sheet
+ * @param {SelectedProducts[]} [defaultSelectedProducts] - lista de produtos selecionados padrão
+ * @returns JSX.Element
+ */
 const UpsertSheetContent = ({
+  saleId,
   products,
   productOptions,
   onSubmitSuccess,
+  defaultSelectedProducts,
 }: UpsertSheetContentProps) => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts[]>(
-    []
+    defaultSelectedProducts ?? []
   );
   const form = useForm<FormSchema>({
+    // shouldUnregister: true,
     resolver: zodResolver(formSchema),
     defaultValues: {
       productId: "",
@@ -152,13 +164,15 @@ const UpsertSheetContent = ({
   const onSubmitSale = async () => {
     try {
       await createSale({
+        id: saleId,
         product: selectedProducts.map((product) => ({
           id: product.id,
           quantity: product.quantity,
         })),
       });
       toast.success("Venda realizada com sucesso!");
-      onSubmitSuccess();
+      onSubmitSuccess(false);
+      
     } catch (error) {
       console.log(error);
       toast.error("Erro ao realizar venda!");
@@ -264,7 +278,8 @@ const UpsertSheetContent = ({
         </Table>
         {/* fim da tabela */}
         <SheetFooter>
-          <Button onClick={onSubmitSale}
+          <Button
+            onClick={onSubmitSale}
             className="w-full mt-10 gap-2"
             disabled={selectedProducts.length === 0}
           >
