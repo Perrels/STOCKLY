@@ -1,3 +1,5 @@
+import { cn } from "../_lib/utils";
+
 export const HeaderTitle = ({ children }: { children: React.ReactNode }) => {
   return <h2 className="text-xl font-semibold">{children}</h2>;
 };
@@ -16,10 +18,16 @@ export const HeaderRight = ({ children }: { children: React.ReactNode }) => {
   return <div>{children}</div>;
 };
 
-const Header = ({ children }: { children: React.ReactNode }) => {
+const Header = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
     <>
-      <div className="flex w-full items-center justify-between">{children}</div>
+      <div className={cn("flex items-center justify-between", className)}>{children}</div>
     </>
   );
 };

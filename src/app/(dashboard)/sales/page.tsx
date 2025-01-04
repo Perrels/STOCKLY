@@ -4,6 +4,12 @@ import CreateSaleSheet from "./_components/create-sale-sheet";
 import { DataTable } from "@/app/_components/ui/data-table";
 import { saleTableColumns } from "./_components/table-columns-sales";
 import { getSales } from "../_actions/_sales/get-sales";
+import Header, {
+  HeaderLeft,
+  HeaderTitle,
+  HeaderSubTitle,
+  HeaderRight,
+} from "@/app/_components/header";
 // forçar que a pagina sempre seja renderizada de forma dinamica
 export const dynamic = "force-dynamic";
 
@@ -22,15 +28,19 @@ const SalesPage = async () => {
   return (
     <>
       <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md">
-        <div className="flex w-full items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold text-slate-500">
-              Gestão de Vendas
-            </span>
-            <h2 className="text-xl font-semibold">Vendas</h2>
-          </div>
-          <CreateSaleSheet products={products} productOptions={productsOptions} />
-        </div>
+        <Header>
+          <HeaderLeft>
+            <HeaderTitle>Produtos</HeaderTitle>
+            <HeaderSubTitle>Gestão de produtos</HeaderSubTitle>
+          </HeaderLeft>
+          <HeaderRight>
+            <CreateSaleSheet
+              products={products}
+              productOptions={productsOptions}
+            />
+          </HeaderRight>
+        </Header>
+
         <DataTable columns={saleTableColumns} data={tableData} />
       </div>
     </>

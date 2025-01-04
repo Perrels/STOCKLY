@@ -3,6 +3,9 @@ import { DataTable } from "@/app/_components/ui/data-table";
 import { cachedGetProducts } from "../_actions/_products/products";
 import { cookies, headers } from "next/headers";
 import AddProductButton from "./_components/add-product-button";
+import Header, { HeaderLeft, HeaderTitle, HeaderSubTitle, HeaderRight } from "@/app/_components/header";
+import { Button } from "@/app/_components/ui/button";
+
 
 // forçar que a pagina sempre seja renderizada de forma dinamica
 export const dynamic = "force-dynamic";
@@ -24,18 +27,15 @@ const ProductsPage = async () => {
   return (
     <>
       <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md">
-        <div className="flex w-full items-center justify-between">
-          {/* esquerda */}
-          <div className="space-y-1">
-            <span className="text-xs font-semibold text-slate-500">
-              Gestão de Produtos
-            </span>
-            <h2 className="text-xl font-semibold">Produtos</h2>
-            {/* <p className="text-gray-500">Lista de produtos cadastrados</p> */}
-          </div>
-          {/* direita */}
-          <AddProductButton />
-        </div>
+        <Header>
+          <HeaderLeft>
+            <HeaderTitle>Produtos</HeaderTitle>
+            <HeaderSubTitle>Gestão de produtos</HeaderSubTitle>
+          </HeaderLeft>
+          <HeaderRight>
+            <AddProductButton />
+          </HeaderRight>
+        </Header>
         {/* Passando dados como parametro para um client component */}
         <DataTable
           columns={productTableColumns}
