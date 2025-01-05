@@ -66,4 +66,5 @@ export const createSale = async (data: CreateSaleSchema) => {
 
   revalidatePath("/dashboard/products");
   revalidatePath("/dashboard/sales");
+  revalidatePath("/dashboard/dash");
 };

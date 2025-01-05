@@ -30,8 +30,8 @@ const SalesPage = async () => {
       <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md">
         <Header>
           <HeaderLeft>
-            <HeaderTitle>Produtos</HeaderTitle>
-            <HeaderSubTitle>Gestão de produtos</HeaderSubTitle>
+            <HeaderTitle>Vendas</HeaderTitle>
+            <HeaderSubTitle>Gestão de vendas</HeaderSubTitle>
           </HeaderLeft>
           <HeaderRight>
             <CreateSaleSheet
