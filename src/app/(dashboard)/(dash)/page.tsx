@@ -1,4 +1,11 @@
-import { BoxIcon, CircleDollarSign, DollarSign, PackageCheck, PackageIcon, ShoppingBasketIcon } from "lucide-react";
+import {
+  BoxIcon,
+  CircleDollarSign,
+  DollarSign,
+  PackageCheck,
+  PackageIcon,
+  ShoppingBasketIcon,
+} from "lucide-react";
 import Header, {
   HeaderLeft,
   HeaderRight,
@@ -11,8 +18,12 @@ import SummaryCard, {
   SummaryCardTitle,
   SummaryCardValue,
 } from "./_components/summary-card";
+import { getDashboard } from "../_actions/dashboard/get-dashboard";
+import { formatCurrency } from "../helper/currency";
 
-export default function Home() {
+export default async function Home() {
+  const { totalRevenue, todayRevenue, totalSales, totalStock, totalProducts } =
+    await getDashboard();
   return (
     <>
       <div className="w-full space-y-8 mx-4 mt-3 p-4 shadow-lg shadow-black/20 rounded-md">
@@ -33,7 +44,7 @@ export default function Home() {
               <DollarSign />
             </SummaryCardIcon>
             <SummaryCardTitle>Receita Total</SummaryCardTitle>
-            <SummaryCardValue>R$ 45.000,00</SummaryCardValue>
+            <SummaryCardValue>{formatCurrency(totalRevenue)}</SummaryCardValue>
           </SummaryCard>
           {/* card receita de hoje */}
           <SummaryCard>
@@ -41,7 +52,7 @@ export default function Home() {
               <DollarSign />
             </SummaryCardIcon>
             <SummaryCardTitle>Receita Hoje</SummaryCardTitle>
-            <SummaryCardValue>R$ 5.000,00</SummaryCardValue>
+            <SummaryCardValue>{formatCurrency(todayRevenue)}</SummaryCardValue>
           </SummaryCard>
         </div>
         <div className="grid grid-cols-3 gap-6">
@@ -51,7 +62,7 @@ export default function Home() {
               <CircleDollarSign />
             </SummaryCardIcon>
             <SummaryCardTitle>Vendas totais</SummaryCardTitle>
-            <SummaryCardValue>1040</SummaryCardValue>
+            <SummaryCardValue>{totalSales}</SummaryCardValue>
           </SummaryCard>
           {/* card Total em estoque */}
           <SummaryCard>
@@ -59,7 +70,7 @@ export default function Home() {
               <PackageIcon />
             </SummaryCardIcon>
             <SummaryCardTitle>Total em estoque</SummaryCardTitle>
-            <SummaryCardValue>20.000</SummaryCardValue>
+            <SummaryCardValue>{totalStock}</SummaryCardValue>
           </SummaryCard>
           {/* card Total de produtos */}
           <SummaryCard>
@@ -67,7 +78,7 @@ export default function Home() {
               <ShoppingBasketIcon />
             </SummaryCardIcon>
             <SummaryCardTitle>Total Produtos</SummaryCardTitle>
-            <SummaryCardValue>60</SummaryCardValue>
+            <SummaryCardValue>{totalProducts}</SummaryCardValue>
           </SummaryCard>
         </div>
       </div>

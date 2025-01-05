@@ -10,19 +10,22 @@ interface DashBoardDto {
 }
 
 export const getDashboard = async (): Promise<DashBoardDto> => {
-  const totalRevenuePromisse = db.saleProduct.aggregate({
-    _sum: { unitPrice: true },
-  });
+  const totalRevenueQuery = `SELECT SUM("unitPrice" * "quantity") as "totalRevenue" FROM "SaleProduct";`;
 
-  const todayRevenuePromisse = db.saleProduct.aggregate({
-    _sum: { unitPrice: true },
-    where: {
-      createAt: {
-        gte: new Date(new Date().setHours(0, 0, 0, 0)),
-        lte: new Date(new Date().setHours(23, 59, 59, 999)),
-      },
-    },
-  });
+  const todayRevenueQuery = `SELECT SUM ("unitPrice" * "quantity") as "todayRevenue" FROM "SaleProduct" WHERE "createAt" >= $1 AND "createAt" <= $2;`;
+
+  const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
+  const endOfDay = new Date(new Date().setHours(23, 59, 59, 999));
+
+  //run the raw sql queries
+  const totalRevenuePromise =
+    db.$queryRawUnsafe<{ totalRevenue: number }[]>(totalRevenueQuery);
+
+  const todayRevenuePromise = db.$queryRawUnsafe<{ todayRevenue: number }[]>(
+    todayRevenueQuery,
+    startOfDay,
+    endOfDay
+  );
 
   const totalSalesPromisse = db.sale.count();
   const totalStockPromisse = db.product.aggregate({
@@ -33,17 +36,18 @@ export const getDashboard = async (): Promise<DashBoardDto> => {
 
   //   cria uma lista que vai rodar todas as promisses ao mesmo tempo já que nenhuma depende da outra para funcionar
 
-  const [totalRevenue, todayRevenue, totalSales, totalStock, totalProducts] = await Promise.all([
-    totalRevenuePromisse,
-    todayRevenuePromisse,
-    totalSalesPromisse,
-    totalStockPromisse,
-    totalProductsPromisse,
-  ]);
+  const [totalRevenue, todayRevenue, totalSales, totalStock, totalProducts] =
+    await Promise.all([
+      totalRevenuePromise,
+      todayRevenuePromise,
+      totalSalesPromisse,
+      totalStockPromisse,
+      totalProductsPromisse,
+    ]);
 
   return {
-    totalRevenue: Number(totalRevenue._sum.unitPrice || 0),
-    todayRevenue: Number(todayRevenue._sum.unitPrice || 0),
+    totalRevenue: totalRevenue[0].totalRevenue || 0,
+    todayRevenue: todayRevenue[0].todayRevenue || 0,
     totalSales,
     totalStock: Number(totalStock._sum.stock || 0),
     totalProducts,
