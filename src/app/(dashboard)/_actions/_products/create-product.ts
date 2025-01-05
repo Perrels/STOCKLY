@@ -14,4 +14,5 @@ export const upsertProduct = async (data: FormSchemaProduct) => {
     update: data,
   });
   revalidatePath("/dashboard/products");
+  revalidatePath("/", "layout");
 };

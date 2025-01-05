@@ -26,4 +26,5 @@ export const deleteSale = actionClient
     revalidatePath("/dashboard/sales");
     revalidatePath("/dashboard/products");
     revalidatePath("/dashboard/dash");
+    revalidatePath("/", "layout");
   });
