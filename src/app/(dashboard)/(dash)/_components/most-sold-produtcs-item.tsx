@@ -1,10 +1,10 @@
 import { Badge } from "@/app/_components/ui/badge";
-import { MostSoldProducts } from "../../_actions/dashboard/get-dashboard";
 import { formatCurrency } from "../../helper/currency";
 import { AlertCircle, CheckIcon, X } from "lucide-react";
+import { MostSoldProductDto } from "../../_actions/dashboard/get-most-sold-products";
 
 interface MostSoldProdutcsItemProps {
-  product: MostSoldProducts;
+  product: MostSoldProductDto;
 }
 
 const MostSoldProdutcsItem = ({ product }: MostSoldProdutcsItemProps) => {
