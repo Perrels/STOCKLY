@@ -1,5 +1,11 @@
 "use server";
 import { db } from "@/app/_lib/prisma";
+import dayjs from "dayjs";
+
+export interface DayTotalRevenue {
+  day: string;
+  totalRevenue: number;
+}
 
 interface DashBoardDto {
   totalRevenue: number;
@@ -7,9 +13,32 @@ interface DashBoardDto {
   totalSales: number;
   totalStock: number;
   totalProducts: number;
+  totalLast14DaysRevenue: DayTotalRevenue[];
 }
 
 export const getDashboard = async (): Promise<DashBoardDto> => {
+  const today = dayjs().endOf("day").toDate();
+  const last14Days = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map((day) =>
+    dayjs(today).subtract(day, "day")
+  );
+
+  const totalLast14DaysRevenue: DayTotalRevenue[] = [];
+
+  for (const day of last14Days) {
+    const totalRevenueQuery = await db.$queryRawUnsafe<
+      { totalRevenue: number }[]
+    >(
+      `SELECT SUM ("unitPrice" * "quantity") as "totalRevenue" FROM "SaleProduct" WHERE "createAt" >= $1 AND "createAt" <= $2;`,
+      day.startOf("day").toDate(),
+      day.endOf("day").toDate()
+    );
+
+    totalLast14DaysRevenue.push({
+      day: day.format("DD/MM"),
+      totalRevenue: totalRevenueQuery[0].totalRevenue,
+    });
+  }
+
   const totalRevenueQuery = `SELECT SUM("unitPrice" * "quantity") as "totalRevenue" FROM "SaleProduct";`;
 
   const todayRevenueQuery = `SELECT SUM ("unitPrice" * "quantity") as "todayRevenue" FROM "SaleProduct" WHERE "createAt" >= $1 AND "createAt" <= $2;`;
@@ -51,5 +80,6 @@ export const getDashboard = async (): Promise<DashBoardDto> => {
     totalSales,
     totalStock: Number(totalStock._sum.stock || 0),
     totalProducts,
+    totalLast14DaysRevenue,
   };
 };

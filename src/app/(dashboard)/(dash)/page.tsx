@@ -1,5 +1,6 @@
 import {
   BoxIcon,
+  ChartBarIcon,
   CircleDollarSign,
   DollarSign,
   PackageCheck,
@@ -20,13 +21,27 @@ import SummaryCard, {
 } from "./_components/summary-card";
 import { getDashboard } from "../_actions/dashboard/get-dashboard";
 import { formatCurrency } from "../helper/currency";
+import RevenueChart from "./_components/revenue-chart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/app/_components/ui/card";
 
 export default async function Home() {
-  const { totalRevenue, todayRevenue, totalSales, totalStock, totalProducts } =
-    await getDashboard();
+  const {
+    totalRevenue,
+    todayRevenue,
+    totalSales,
+    totalStock,
+    totalProducts,
+    totalLast14DaysRevenue,
+  } = await getDashboard();
   return (
     <>
-      <div className="w-full space-y-8 mx-4 mt-3 p-4 shadow-lg shadow-black/20 rounded-md">
+      <div className="w-full space-y-8 mx-4 mt-3 p-4 shadow-lg shadow-black/20 rounded-md flex flex-col">
         <Header>
           <HeaderLeft>
             <HeaderTitle>Dashboard</HeaderTitle>
@@ -80,6 +95,13 @@ export default async function Home() {
             <SummaryCardTitle>Total Produtos</SummaryCardTitle>
             <SummaryCardValue>{totalProducts}</SummaryCardValue>
           </SummaryCard>
+        </div>
+        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
+          <div className="h-9 w-9 flex items-center justify-center rounded-md text-emerald-500 bg-emerald-500 bg-opacity-10 mb-2">
+            <ChartBarIcon />
+          </div>
+          <p className="text-sm font-medium text-slate-500">Receita dos últimos 14 dias</p>
+          <RevenueChart data={totalLast14DaysRevenue} />
         </div>
       </div>
     </>
