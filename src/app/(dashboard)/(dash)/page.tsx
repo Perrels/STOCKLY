@@ -6,6 +6,7 @@ import {
   PackageCheck,
   PackageIcon,
   ShoppingBasketIcon,
+  StarIcon,
 } from "lucide-react";
 import Header, {
   HeaderLeft,
@@ -22,13 +23,7 @@ import SummaryCard, {
 import { getDashboard } from "../_actions/dashboard/get-dashboard";
 import { formatCurrency } from "../helper/currency";
 import RevenueChart from "./_components/revenue-chart";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/app/_components/ui/card";
+import MostSoldProdutcsItem from "./_components/most-sold-produtcs-item";
 
 export default async function Home() {
   const {
@@ -38,6 +33,7 @@ export default async function Home() {
     totalStock,
     totalProducts,
     totalLast14DaysRevenue,
+    mostSoldProducts,
   } = await getDashboard();
   return (
     <>
@@ -96,12 +92,25 @@ export default async function Home() {
             <SummaryCardValue>{totalProducts}</SummaryCardValue>
           </SummaryCard>
         </div>
+        <div className="grid grid-cols-[2fr,1fr] min-h-0 gap-6">
         <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
-          <div className="h-9 w-9 flex items-center justify-center rounded-md text-emerald-500 bg-emerald-500 bg-opacity-10 mb-2">
-            <ChartBarIcon />
+            <div className="h-9 w-9 flex items-center justify-center rounded-md text-emerald-500 bg-emerald-500 bg-opacity-10 mb-2">
+              <ChartBarIcon />
+            </div>
+            <p className="text-sm font-medium text-slate-500">
+              Receita dos últimos 14 dias
+            </p>
+            <RevenueChart data={totalLast14DaysRevenue} />
           </div>
-          <p className="text-sm font-medium text-slate-500">Receita dos últimos 14 dias</p>
-          <RevenueChart data={totalLast14DaysRevenue} />
+          <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
+            <div className="h-9 w-9 flex items-center justify-center rounded-md text-emerald-500 bg-emerald-500 bg-opacity-10 mb-2">
+              <StarIcon />
+            </div>
+            <p className="text-sm font-medium text-slate-500">
+              Produtos mais vendidos
+            </p>
+            <div className="overflow-y-auto space-y-5">{mostSoldProducts.map((product) => <MostSoldProdutcsItem key={product.productId} product={product} />)}</div>
+          </div>
         </div>
       </div>
     </>
