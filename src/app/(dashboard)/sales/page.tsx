@@ -27,7 +27,7 @@ const SalesPage = async () => {
   }));
   return (
     <>
-      <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md">
+      <div className="w-full space-y-8 mx-4 mt-3 p-4 bg-white shadow-lg shadow-black/20 rounded-md overflow-auto">
         <Header>
           <HeaderLeft>
             <HeaderTitle>Vendas</HeaderTitle>
@@ -41,7 +41,7 @@ const SalesPage = async () => {
           </HeaderRight>
         </Header>
 
-        <DataTable columns={saleTableColumns} data={tableData} />
+        <DataTable columns={saleTableColumns} data={JSON.parse(JSON.stringify(tableData))} />
       </div>
     </>
   );

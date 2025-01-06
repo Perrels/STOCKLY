@@ -1,10 +1,8 @@
 import Header, {
   HeaderLeft,
-  HeaderRight,
   HeaderSubTitle,
   HeaderTitle,
 } from "../../_components/header";
-import { Button } from "../../_components/ui/button";
 import TotalRevenueCard from "./_components/total-revenue-card";
 import { Suspense } from "react";
 import SkeletonCard from "./_components/skeleton-card";
@@ -24,9 +22,7 @@ export default async function Home() {
             <HeaderTitle>Dashboard</HeaderTitle>
             <HeaderSubTitle>Visão geral</HeaderSubTitle>
           </HeaderLeft>
-          <HeaderRight>
-            <Button>Novo</Button>
-          </HeaderRight>
+          
         </Header>
         {/* display cards with values and charts */}
         <div className="grid grid-cols-2 gap-6">
